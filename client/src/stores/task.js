@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useTaskStore = defineStore('tasks', {
     state: () => ({
+        newTaskDialog: false,
         dummyTasks: [
             {
                 id: 1,
@@ -60,6 +61,14 @@ export const useTaskStore = defineStore('tasks', {
                         level: 'High',
                         status: false,
                         created_at: new Date()
+                    },
+                    {
+                        id: 4,
+                        name: 'stare at the wall',
+                        description: 'stare at the wall',
+                        level: 'High',
+                        status: false,
+                        created_at: new Date()
                     }
                 ]
             },
@@ -76,6 +85,9 @@ export const useTaskStore = defineStore('tasks', {
                 title: title,
                 tasks: []
             })
+        },
+        showNewTaskDialog() {
+            this.newTaskDialog = !this.newTaskDialog
         }
     },
     getters: {

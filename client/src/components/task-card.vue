@@ -15,19 +15,17 @@
 </script>
 
 <template>
-    <v-card>
-        {{ taskStore.getPendingTasks(dummyTask.id) }}
-        <v-sheet color="blue-lighten-3" height="100" width="auto">
+    <v-card width="370">
+        <v-sheet color="blue-lighten-3" height="100" width="auto" class="header">
             <v-list-item :title="dummyTask.title" subtitle="/5" class="pt-6 ps-5">
                 <template v-slot:prepend>
                     <p class="text-h3">1</p>
                 </template>
                 <template v-slot:append>
-                    <v-menu location="bottom right" persistent>
-                        <template v-slot:activator="{ props }">
-                            <v-btn icon="mdi-plus" v-bind="props" color="blue-darken-2"></v-btn>
-                        </template>
-
+                    <!-- <v-menu location="bottom right" persistent>
+                        <template v-slot:activator="{ props }"> -->
+                            <v-btn icon="mdi-plus" @click="taskStore.showNewTaskDialog" color="blue-darken-2"></v-btn>
+                        <!-- </template>
                         <v-card title="New task" width="350">
                             <v-card-item>
                                 <v-text-field label="Title"></v-text-field>
@@ -38,7 +36,7 @@
                                 <v-btn>Add</v-btn>
                             </v-card-actions>
                         </v-card>
-                    </v-menu>
+                    </v-menu> -->
                 </template>
             </v-list-item>
         </v-sheet>
@@ -132,3 +130,11 @@
         </v-window>
     </v-card>
 </template>
+
+<style scoped>
+
+    .v-sheet {
+        cursor: grab;
+    }
+
+</style>
