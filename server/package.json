@@ -13,6 +13,7 @@
   "main": "index.js",
   "scripts": {
     "server": "node server.js",
+    "auth": "node authserver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -26,7 +26,7 @@
                 <v-avatar>
                     <v-img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Microsoft_To-Do_icon.svg/512px-Microsoft_To-Do_icon.svg.png"></v-img>
                 </v-avatar>
-                <p class="text-h5 font-weight-bold ms-3">To-do app</p> {{ taskStore.newTaskDialog }}
+                <p class="text-h5 font-weight-bold ms-3">To-do app</p> 
             </template>
             <template v-slot:append>
                 <v-switch v-model="darkMode" hide-details inset @click="toggleTheme">
@@ -83,13 +83,4 @@
     .new-task-tab {
         cursor: pointer;
     }
-
-    .VDContainer:hover .v-col {
-        box-shadow: 5px 10px red
-    }
-
-    .dragContainer:hover .vdc-item-container{
-        background-color: red;
-    }
-
 </style>

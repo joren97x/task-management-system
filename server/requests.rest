@@ -1,1 +1,26 @@
 GET http://localhost:3000/tasks
+Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDQ4ODg0MzIsImV4cCI6MTcwNDg4ODQ0N30.mYnUTfXj7YC-Olm1rV37FjyjR9MnG1z3Qo9nKi6UmIQ
+###
+
+DELETE http://localhost:4000/logout
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDQ4ODg0MTZ9.AbdDiH3FwlbLfkjWZaHNYXPhoRZf0RRanOsIrjWNINk"
+}
+
+###
+POST http://localhost:4000/token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDQ4ODg0MTZ9.AbdDiH3FwlbLfkjWZaHNYXPhoRZf0RRanOsIrjWNINk"
+}
+
+###
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+    "username": "Joren"
+}
