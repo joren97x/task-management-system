@@ -1,5 +1,5 @@
 GET http://localhost:3000/tasks
-Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDQ4ODg0MzIsImV4cCI6MTcwNDg4ODQ0N30.mYnUTfXj7YC-Olm1rV37FjyjR9MnG1z3Qo9nKi6UmIQ
+Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDUxNTc4NTQsImV4cCI6MTcwNTE1Nzg2OX0.du7lpsKB3VSr7fuey8_OOqeoLenp_wmp1mG25HFSM_I
 ###
 
 DELETE http://localhost:4000/logout
@@ -14,7 +14,7 @@ POST http://localhost:4000/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDQ4ODg0MTZ9.AbdDiH3FwlbLfkjWZaHNYXPhoRZf0RRanOsIrjWNINk"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9yZW4iLCJpYXQiOjE3MDUxNTc4MTh9.IMT5DZiGey8x_RFUudVHq_Pv7PLp5yPwS33BlAJ7H_g"
 }
 
 ###
@@ -23,4 +23,35 @@ Content-Type: application/json
 
 {
     "username": "Joren"
+}
+###
+POST http://localhost:4000/register
+Content-Type: application/json
+
+{
+    "username": "naega97x",
+    "name": "naega",
+    "password": "asdasd"
+}
+
+###
+
+POST http://localhost:4000/child-task
+Content-Type: application/json
+
+{
+    "parentTaskId": "1",
+    "title": "Dummy child task",
+    "description": "child task description",
+    "level": "Low"
+}
+
+###
+
+POST http://localhost:4000/parent-task
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "title": "DUmmy parent task title"
 }
