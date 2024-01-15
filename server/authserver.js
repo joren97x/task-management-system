@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 dotenv.config()
 const app = express()
 app.use(express.json())
-import { register } from './controllers/authController.js'
+import { register, login } from './controllers/authController.js'
 import { storeChildTask } from './controllers/childTaskController.js'
 import { storeParentTask } from './controllers/parentTaskController.js'
 
@@ -12,6 +12,7 @@ let refreshTokens = []
 
 
 app.post('/register', register)
+app.post('/login', login)
 app.post('/child-task', storeChildTask)
 app.post('/parent-task', storeParentTask)
 

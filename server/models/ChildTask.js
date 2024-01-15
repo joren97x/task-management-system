@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import sequelize from "../config/sequelize.js"
 import { ParentTask } from "./ParentTask.js"
 
-export const ChildTask = sequelize.define('ChildTask', {
+export const ChildTask = sequelize.define('child_task', {
     parentTaskId: {
         type: DataTypes.INTEGER,
         references: {
