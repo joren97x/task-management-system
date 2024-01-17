@@ -10,11 +10,12 @@ export const register = async (req, res) => {
     if(userExists) res.send({message: 'User with email already exists'})
 
     const result = await User.create({ username, name, password })
-    .then(() => {
+    .then((data) => {
+        console.log(data.dataValues)
         const accessToken = generateAccessToken({ username, name, password })
         const refreshToken = jwt.sign({ username, name, password }, process.env.REFRESH_TOKEN_SECRET)
         RefreshToken.create({ userId: result.id, refreshToken, expirationDate: new Date() + 30 })
-        res.json({accessToken: accessToken, refreshToken: refreshToken })
+        res.json({accessToken: accessToken, user: data.dataValues })
     })
     .catch((err) => {
         console.log("error: ", err)

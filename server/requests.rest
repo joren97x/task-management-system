@@ -29,8 +29,8 @@ POST http://localhost:4000/register
 Content-Type: application/json
 
 {
-    "username": "sadd",
-    "name": "brent",
+    "username": "poison",
+    "name": "this cannt be happendingf",
     "password": "asdasd"
 }
 
