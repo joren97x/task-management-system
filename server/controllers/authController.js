@@ -23,16 +23,28 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    // const user = { name: req.body.username }
-    const user = await User.findOne({where: { username: req.body.username }})
-    if(user == null) res.send({message: "Invalid credentials"})
-    console.log(user.dataValues)
-    const accessToken = generateAccessToken(user.dataValues)
-    const refreshToken = jwt.sign(user.dataValues, process.env.REFRESH_TOKEN_SECRET)
-    RefreshToken.create({ userId: user.dataValues.id, refreshToken, expirationDate: new Date() + 30 })
-    res.json({accessToken: accessToken, refreshToken: refreshToken })
+    try {
+        const user = await User.findOne({where: { username: req.body.user.username }})
+        if(user == null) {
+            res.status(401).send({message: "Invalid credentials"})
+        }
+        else {
+            const accessToken = generateAccessToken(user.dataValues)
+            const refreshToken = jwt.sign(user.dataValues, process.env.REFRESH_TOKEN_SECRET)
+            RefreshToken.create({ userId: user.dataValues.id, refreshToken, expirationDate: new Date() + 30 })
+            res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken })
+        }
+    }
+    catch(error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
 }
 
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1m'})
 }
+
+// app.delete('/logout', (req, res) => {
+//     refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+//     res.sendStatus(204)
+// })
