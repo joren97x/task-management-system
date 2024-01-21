@@ -1,4 +1,4 @@
-import { ChildTask } from "../models/ChildTask.js"
+import ChildTask from "../models/ChildTask.js"
 
 export const storeChildTask = async (req, res) => {
     console.log(req.body)

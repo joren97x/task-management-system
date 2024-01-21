@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize"
 import sequelize from "../config/sequelize.js"
-import { ParentTask } from "./ParentTask.js"
+import ParentTask from "./ParentTask.js"
 
-export const ChildTask = sequelize.define('child_task', {
+const ChildTask = sequelize.define('child_task', {
     parentTaskId: {
         type: DataTypes.INTEGER,
         references: {
@@ -27,3 +27,7 @@ export const ChildTask = sequelize.define('child_task', {
         defaultValue: false,
     },
 })
+
+ChildTask.belongsTo(ParentTask, { foreignKey: 'parentTaskId' })
+
+export default ChildTask

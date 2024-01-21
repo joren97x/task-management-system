@@ -3,8 +3,10 @@
     import { reactive, ref } from 'vue'
     import { useRouter } from 'vue-router';
     import axios from 'axios'
+    import { useUserStore } from '@/stores/user';
 
     const router = useRouter()
+    const userStore = useUserStore()
     const errorMsg = ref(null)
     const loading = ref(false)
     const showPassword = ref(false)
@@ -17,8 +19,10 @@
         loading.value = true
         try {
             axios.post('http://localhost:3000/login', {user})
-            .then((data) => {
-                console.log(data)
+            .then((response) => {
+                userStore.setUser(response.data.user)
+                localStorage.setItem('token', response.data.accessToken)
+                router.push('/')
             })
             .catch((err) => {
                 console.log("erorr")

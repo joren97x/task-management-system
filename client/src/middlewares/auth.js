@@ -1,13 +1,15 @@
 import { useRouter } from "vue-router"
 
-const route = useRouter()
-
 export const auth = (to, from, next) => {
+    console.log(to)
+
+    const restrictedPaths = ['/login', '/register']
+
     const token = localStorage.getItem('token')
     if(token) {
-        route.push('/')
+        restrictedPaths.includes(to.path) ? useRouter().push('/') : next()
     }
     else {
-       next()
+        useRouter().push('/login')
     }
 }

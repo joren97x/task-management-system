@@ -1,9 +1,6 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import { authenticateToken } from '../../../server/middlewares/authMiddleware.js'
-import { useRouter } from 'vue-router'
-import { auth } from '@/middlewares/auth.js'
+import {createRouter, createWebHistory, useRouter} from 'vue-router'
 
-const route = useRouter()
+import { auth } from '@/middlewares/auth.js'
 const router = createRouter({
     history: createWebHistory(null),
     routes: [
@@ -11,25 +8,43 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: () => import('../views/home.vue'),
-            beforeEnter: authenticateToken
+            beforeEnter: auth
         },
         {
             path: '/about',
             name: 'about',
             component: () => import('../views/about.vue'),
-            beforeEnter: authenticateToken
+            beforeEnter: auth
         },
         {
             path: '/login',
             name: 'login',
             component: () => import('../views/login.vue'),
-            beforeEnter: auth
+            beforeEnter: (to, from, next) => {
+                const route = useRouter()
+                const token = localStorage.getItem('token')
+                if(token) {
+                    route.push('/')
+                }
+                else {
+                    next()
+                }
+            }
         },
         {
             path: '/register',
             name: 'register',
             component: () => import('../views/register.vue'),
-            beforeEnter: auth
+            beforeEnter: (to, from, next) => {
+                const route = useRouter()
+                const token = localStorage.getItem('token')
+                if(token) {
+                    route.push('/')
+                }
+                else {
+                    next()
+                }
+            }
         },
         
     ]

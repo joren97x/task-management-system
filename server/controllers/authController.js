@@ -24,7 +24,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const user = await User.findOne({where: { username: req.body.user.username }})
+        const user = await User.findOne({ attributes: ['id', 'name', 'username'], where: { username: req.body.user.username }})
         if(user == null) {
             res.status(401).send({message: "Invalid credentials"})
         }
@@ -32,7 +32,7 @@ export const login = async (req, res) => {
             const accessToken = generateAccessToken(user.dataValues)
             const refreshToken = jwt.sign(user.dataValues, process.env.REFRESH_TOKEN_SECRET)
             RefreshToken.create({ userId: user.dataValues.id, refreshToken, expirationDate: new Date() + 30 })
-            res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken })
+            res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken, user})
         }
     }
     catch(error) {
