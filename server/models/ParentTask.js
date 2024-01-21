@@ -7,7 +7,7 @@ const ParentTask = sequelize.define('parent_task', {
     userId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'User',
+            model: 'users',
             key: 'id'
         }
     },
@@ -17,8 +17,8 @@ const ParentTask = sequelize.define('parent_task', {
     }
 })
 
-ParentTask.hasMany(ChildTask)
-ParentTask.belongsTo(User)
+// ParentTask.hasMany(ChildTask)
+// ParentTask.belongsTo(User)
 
 export default ParentTask
 
