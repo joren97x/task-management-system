@@ -1,3 +1,4 @@
+## currently not finisihed 
 # setup
 make sure to create a database named task_management and import the file with a .sql extension in the root folder
 
