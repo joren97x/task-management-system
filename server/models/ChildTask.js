@@ -6,7 +6,7 @@ const ChildTask = sequelize.define('child_task', {
     parentTaskId: {
         type: DataTypes.INTEGER,
         references: {
-            model: ParentTask,
+            model: 'ParentTask',
             key: 'id'
         }
     },
@@ -28,6 +28,6 @@ const ChildTask = sequelize.define('child_task', {
     },
 })
 
-ChildTask.belongsTo(ParentTask, { foreignKey: 'parentTaskId' })
+ChildTask.belongsTo(ParentTask)
 
 export default ChildTask

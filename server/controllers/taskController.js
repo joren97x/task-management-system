@@ -1,6 +1,10 @@
-import ParentTask from "../models/ParentTask.js"
-import ChildTask from "../models/ChildTask.js"
 import { Sequelize } from "sequelize"
+import User from '../models/User.js'
+const ParentTaskModule = await (import('../models/ParentTask.js'))
+const ChildTaskodule = await (import('../models/ChildTask.js'))
+
+const ParentTask = ParentTaskModule.default
+const ChildTask = ChildTaskodule.default
 
 export const getAllTasks = async (req, res) => {
     try {
@@ -8,25 +12,8 @@ export const getAllTasks = async (req, res) => {
             where: {
                 userId: req.params.id
             },
-            include: [
-                {
-                    model: ChildTask,
-                    where: {
-                        parentTaskId: Sequelize.col('ParentTask.id')
-                    }
-                }
-            ]
+            include: User
         })
-
-        // console.log("FROM TASK CONTROLLER")
-        // result.forEach(async (task) => {
-        //     const child_tasks = await ChildTask.findAll({
-        //         where: {
-        //             parentTaskId: task.dataValues.id
-        //         }
-        //     })
-
-        // })
 
         res.json(result)
     }

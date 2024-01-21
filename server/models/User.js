@@ -1,7 +1,8 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../config/sequelize.js'
+import ParentTask from './ParentTask.js'
 
-export const User = sequelize.define('User', {
+const User = sequelize.define('User', {
     username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -16,9 +17,7 @@ export const User = sequelize.define('User', {
         allowNull: false,
     }
 })
-// export const store = (data, res) => {
-//     db.query("INSERT INTO users SET ?", [data], (err, result) => {
-//         if(err) return res(err, null)
-//         res(err, result)
-//     })
-// }
+
+User.hasMany(ParentTask)
+
+export default User

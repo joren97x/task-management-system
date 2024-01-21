@@ -1,28 +1,25 @@
 import { DataTypes } from "sequelize"
 import sequelize from "../config/sequelize.js"
-import { User } from "./User.js"
 import ChildTask from "./ChildTask.js"
+import User from "./User.js"
 
-const defineParentTask = async() => {
-    await sequelize.sync()
-
-    const ParentTask = sequelize.define('parent_task', {
-        userId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: User,
-                key: 'id'
-            }
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false
+const ParentTask = sequelize.define('parent_task', {
+    userId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'User',
+            key: 'id'
         }
-    })
-    ParentTask.hasMany(ChildTask, { foreignKey: 'parentTaskId' })
-    return ParentTask
-}
-    
-export default defineParentTask
+    },
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+})
+
+ParentTask.hasMany(ChildTask)
+ParentTask.belongsTo(User)
+
+export default ParentTask
 
 

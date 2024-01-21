@@ -41,7 +41,7 @@ export const login = async (req, res) => {
 }
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1m'})
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '24h'})
 }
 
 // app.delete('/logout', (req, res) => {

@@ -16,9 +16,13 @@
     const darkMode = ref(false)
 
     onMounted(async() => {
-        console.log(userStore.user)
-        // const tasks = await axios.get(`http://localhost:3000/tasks/${userStore.user.id}`)
-        // console.log(tasks)
+        console.log(localStorage.getItem('token'))
+        const tasks = await axios.get(`http://localhost:3000/tasks/${userStore.user.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        console.log(tasks)
     })
 
     function createNewTasksTab() {
