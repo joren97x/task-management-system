@@ -19,10 +19,10 @@
         console.log(localStorage.getItem('token'))
         const tasks = await axios.get(`http://localhost:3000/tasks/${userStore.user.id}`, {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+                Authorization: `Bearer ${userStore.token}`
             }
         })
-        console.log(tasks)
+        taskStore.tasks = tasks.data
     })
 
     function createNewTasksTab() {
@@ -59,11 +59,10 @@
             </template>
         </v-list-item>
         <v-row>
-            {{ userStore.user }}
-            <VDContainer :animation="true" :data=taskStore.dummyTasks type="sort" @getData=funcName class="dragContainer">
+            <VDContainer :animation="true" :data=taskStore.tasks v-if="taskStore.tasks" type="sort" @getData=funcName class="dragContainer">
                 <template v-slot:VDC="{data}">
                     <v-col cols="4">
-                        <taskCard :dummyTask="data" />
+                        <taskCard :task="data" />
                     </v-col>
                 </template>
             </VDContainer>
@@ -84,8 +83,13 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-dialog v-model="taskStore.newTaskDialog">
-            <v-card title="New task tab">
+        <!-- <v-dialog v-model="taskStore.newTaskDialog">
+            <v-card title="New child task">
+                <v-card-item>
+                    <v-alert icon="mdi-alert">
+                        This will insert a new task inside the {{ task }}
+                    </v-alert>
+                </v-card-item>
                 <v-card-item>
                     <v-text-field label="Title" variant="solo"></v-text-field>
                     <v-text-field label="Description" variant="solo"></v-text-field>
@@ -96,7 +100,7 @@
                     <v-btn color="green">Add</v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
+        </v-dialog> -->
     </v-container>
 </template>
 

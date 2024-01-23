@@ -20,8 +20,7 @@
         try {
             axios.post('http://localhost:3000/login', {user})
             .then((response) => {
-                userStore.setUser(response.data.user)
-                localStorage.setItem('token', response.data.accessToken)
+                userStore.setUser(response.data.user, response.data.accessToken)
                 router.push('/')
             })
             .catch((err) => {

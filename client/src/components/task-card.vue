@@ -1,42 +1,39 @@
 <script setup>
 
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
     import { useTaskStore } from '../stores/task.js'
+    const prop = defineProps({ task: Object })
 
     const taskStore = useTaskStore()
+    const newChildTaskDialog = ref(false)
     const tab = ref(null)
     const levelIcons = new Map([
         ['High', { icon: 'mdi-arrow-up', color: 'red' }],
         ['Medium', { icon: 'mdi-minus', color: 'orange' }],
         ['Low', { icon: 'mdi-arrow-down', color: '' }],
     ])
-    defineProps({ dummyTask: Object })
+
+    const pendingTasks = prop.task.child_tasks.filter(childTask => childTask.status)
+
+    const completed = computed(() => {
+        return prop.task.child_tasks.filter(childTask => childTask.status).length
+    })
+
 
 </script>
 
 <template>
     <v-card width="370">
+        {{ pendingTasks }}
         <v-sheet color="blue-lighten-3" height="100" width="auto" class="header">
-            <v-list-item :title="dummyTask.title" subtitle="/5" class="pt-6 ps-5">
+            <v-list-item :title="task.title" :subtitle="`/${task.child_tasks.length}`" class="pt-6 ps-5">
                 <template v-slot:prepend>
-                    <p class="text-h3">1</p>
+                    <p class="text-h3">
+                        {{ completed }}
+                    </p>
                 </template>
                 <template v-slot:append>
-                    <!-- <v-menu location="bottom right" persistent>
-                        <template v-slot:activator="{ props }"> -->
-                            <v-btn icon="mdi-plus" @click="taskStore.showNewTaskDialog" color="blue-darken-2"></v-btn>
-                        <!-- </template>
-                        <v-card title="New task" width="350">
-                            <v-card-item>
-                                <v-text-field label="Title"></v-text-field>
-                                <v-textarea label="Description"></v-textarea>
-                            </v-card-item>
-                            <v-card-actions>
-                                <v-spacer/>
-                                <v-btn>Add</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-menu> -->
+                    <v-btn icon="mdi-plus" @click="newChildTaskDialog = true" color="blue-darken-2"></v-btn>
                 </template>
             </v-list-item>
         </v-sheet>
@@ -66,18 +63,18 @@
 
         <v-window v-model="tab">
             <v-window-item value="tasks">
-                <p v-if="dummyTask.tasks.length == 0" class="text-center">No tasks found.</p>
+                <p v-if="task.child_tasks.length == 0" class="text-center">No tasks found.</p>
                 <v-card>
                     <v-list>
-                        <v-list-item @click="taskStore.markAsDone(dummyTask.id, task.id)" :value="task.id" v-for="task in dummyTask.tasks" :key="task.id" :class="task.status ? 'text-grey' : ''">
+                        <v-list-item @click="taskStore.changeStatus(!child_task.status , task.id, child_task.id)" :value="child_task.id" v-for="child_task in task.child_tasks" :key="child_task.id" :class="child_task.status ? 'text-grey' : ''">
                             <template v-slot:prepend>
-                                <v-icon size="small">{{ task.status ? 'mdi-check-circle-outline' : 'mdi-circle-outline' }}</v-icon>
+                                <v-icon size="small">{{ child_task.status ? 'mdi-check-circle-outline' : 'mdi-circle-outline' }}</v-icon>
                             </template>
-                            <p :class="task.status ? 'text-decoration-line-through' : ''"> {{ task.name }} </p>
+                            <p :class="child_task.status ? 'text-decoration-line-through' : ''"> {{ child_task.title }} </p>
                             <template v-slot:append>
-                                <v-chip :color="levelIcons.get(task.level).color" :disabled="task.status" size="small">
-                                    <v-icon start :icon="levelIcons.get(task.level).icon"></v-icon>
-                                    {{ task.level }}
+                                <v-chip :color="levelIcons.get(child_task.level).color" :disabled="child_task.status" size="small">
+                                    <v-icon start :icon="levelIcons.get(child_task.level).icon"></v-icon>
+                                    {{ child_task.level }}
                                 </v-chip>
                                 <v-btn icon="mdi-chevron-right" @click="tab = 'info'" variant="text" size="small"></v-btn>
                             </template>
@@ -128,7 +125,26 @@
                 </v-card>
             </v-window-item>
         </v-window>
+        <v-dialog v-model="newChildTaskDialog">
+            <v-card title="New child task">
+                <v-card-item>
+                    <v-alert icon="mdi-alert">
+                        This will insert a new task inside the <strong>{{ task.title }}</strong>
+                    </v-alert>
+                </v-card-item>
+                <v-card-item>
+                    <v-text-field label="Title" variant="solo"></v-text-field>
+                    <v-text-field label="Description" variant="solo"></v-text-field>
+                    <v-select label="Level" variant="solo" :items="['High', 'Medium', 'Low']"></v-select>
+                </v-card-item>
+                <v-card-actions>
+                    <v-btn @click="newChildTaskDialog = false">Close</v-btn>
+                    <v-btn color="green">Add</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
+    
 </template>
 
 <style scoped>

@@ -1,83 +1,35 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
+import { useUserStore } from './user'
+
+const userStore = useUserStore()
 
 export const useTaskStore = defineStore('tasks', {
     state: () => ({
-        newTaskDialog: false,
-        dummyTasks: [
-            {
-                id: 1,
-                title: 'Random tasks',
-                tasks: [
-                    {
-                        id: 1,
-                        name: 'touch grass',
-                        description: 'touch grass',
-                        level: 'High',
-                        status: false,
-                        created_at: new Date()
-                    },
-                    {
-                        id: 2,
-                        name: 'manglaba',
-                        description: 'manglaba',
-                        level: 'Medium',
-                        status: true,
-                        created_at: new Date()
-                    },
-                    {
-                        id: 3,
-                        name: 'drink water',
-                        description: 'drink water',
-                        level: 'High',
-                        status: false,
-                        created_at: new Date()
-                    }
-                ]
-            },
-            {
-                id: 2,
-                title: 'Default tasks',
-                tasks: [
-                    {
-                        id: 1,
-                        name: 'eat egg',
-                        description: 'eat egg',
-                        level: 'Medium',
-                        status: false,
-                        created_at: new Date()
-                    },
-                    {
-                        id: 2,
-                        name: 'listen to music',
-                        description: 'listen to music',
-                        level: 'Low',
-                        status: false,
-                        created_at: new Date()
-                    },
-                    {
-                        id: 3,
-                        name: 'stare at the wall',
-                        description: 'stare at the wall',
-                        level: 'High',
-                        status: false,
-                        created_at: new Date()
-                    },
-                    {
-                        id: 4,
-                        name: 'stare at the wall',
-                        description: 'stare at the wall',
-                        level: 'High',
-                        status: false,
-                        created_at: new Date()
-                    }
-                ]
-            },
-        ]
+        tasks: null,
     }),
     actions: {
-        markAsDone(parentTask_id, childTask_id) {
-            console.log(parentTask_id)
-            console.log(childTask_id)
+        changeStatus(status, parentTask_id, childTask_id) {
+            console.log(userStore.token)
+            axios.put('http://localhost:3000/change-status', {status: status, parent_task_id: parentTask_id, child_task_id: childTask_id}, {
+                headers: {
+                    Authorization: `Bearer ${userStore.token}`
+                }
+            })
+            .then((data) => {
+                console.log("SUCESS PRE")
+                console.log(data)
+                const parentTaskIndex = this.tasks.findIndex(task => task.id === parentTask_id);
+                if (parentTaskIndex !== -1) {
+                    const childTaskIndex = this.tasks[parentTaskIndex].child_tasks.findIndex(childTask => childTask.id === childTask_id);
+                    if (childTaskIndex !== -1) {
+                        this.tasks[parentTaskIndex].child_tasks[childTaskIndex].status = !this.tasks[parentTaskIndex].child_tasks[childTaskIndex].status;
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         },
         newTasks(title) {
             this.dummyTasks.push({
@@ -86,9 +38,6 @@ export const useTaskStore = defineStore('tasks', {
                 tasks: []
             })
         },
-        showNewTaskDialog() {
-            this.newTaskDialog = !this.newTaskDialog
-        }
     },
     getters: {
         // getPendingTasks: (state) => (tasks_id) => {

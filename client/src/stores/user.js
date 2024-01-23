@@ -2,16 +2,16 @@ import { defineStore } from "pinia"
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: JSON.parse(localStorage.getItem('user')) || null
+        user: JSON.parse(localStorage.getItem('user')) || null,
+        token: JSON.parse(localStorage.getItem('token')) || null
     }),
     actions: {
-        setUser(user) {
+        setUser(user, token) {
             this.user = user
+            this.token = token
             localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('token', JSON.stringify(token))
         },
-        sayMyName() {
-            console.log(this.user.name)
-        }
     },
     getters: {
 
