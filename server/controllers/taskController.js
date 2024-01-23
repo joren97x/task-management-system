@@ -9,16 +9,27 @@ const ChildTask = ChildTaskodule.default
 export const getAllTasks = async (req, res) => {
     try {
         const result = await ParentTask.findAll({
-            where: {
-                userId: req.params.id
-            },
-            include: User
+            include: ChildTask
         })
-
         res.json(result)
     }
     catch(error) {
         console.log(error)
     }
+}
 
+export const changeStatus = async (req, res) => {
+    try {
+        await ChildTask.update({ status: req.body.status }, {
+            where: {
+                id: req.body.child_task_id,
+                parentTaskId: req.body.parent_task_id
+            }
+        })
+        res.status(200).json({message: 'successfully changed status'})
+    }
+    catch(error) {
+        res.status(500).send({message: 'Internal server error'})
+        console.log(error)
+    }
 }
