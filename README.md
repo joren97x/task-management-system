@@ -1,4 +1,4 @@
-# forda how to setup ang froject  
+# forda unsaon pag setup ang froject HAHAHAH  
 make sure to create a database named task_management and import the file with a .sql extension in the root folder
 
 Requirements
