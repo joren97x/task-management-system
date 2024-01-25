@@ -3,6 +3,8 @@ make sure to create a database named task_management and import the file with a 
 
 Requirements
 > Nodejs
+> Vue CLI
+
 
 #client
 ```bash
