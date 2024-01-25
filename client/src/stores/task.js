@@ -6,9 +6,15 @@ const userStore = useUserStore()
 
 export const useTaskStore = defineStore('tasks', {
     state: () => ({
-        tasks: null,
+        tasks: [],
     }),
     actions: {
+        push(task) {
+            this.tasks.push(task)
+        },
+        deleteParentTask(index) {
+            this.tasks.splice(index, 1)
+        },
         changeStatus(status, parentTask_id, childTask_id) {
             console.log(userStore.token)
             axios.put('http://localhost:3000/change-status', {status: status, parent_task_id: parentTask_id, child_task_id: childTask_id}, {
@@ -31,26 +37,6 @@ export const useTaskStore = defineStore('tasks', {
                 console.log(error)
             })
         },
-        newTasks(title) {
-            this.dummyTasks.push({
-                id: Math.random() * 100,
-                title: title,
-                tasks: []
-            })
-        },
     },
-    getters: {
-        // getPendingTasks: (state) => (tasks_id) => {
-        //     console.log(tasks_id)
-        //     for(const taskGroup of state.dummyTasks) {
-        //         if(taskGroup.id == tasks_id) {
-        //             for(const task in taskGroup.tasks) {
-        //                 if(task.status == true) {
-        //                     return task
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-    }
+    
 })

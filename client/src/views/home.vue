@@ -22,21 +22,46 @@
                     Authorization: `Bearer ${userStore.token}`
                 }
             })
-            taskStore.tasks = tasks.data
+            tasks.data.forEach(task => {
+                taskStore.push(task)
+            })
         }
         catch(error) {
-            console.log(error.response.status)
             if(error.response.status == 403) {
-                logout()
+                logout() 
+                //john eben ligan
             }
         }
     })
 
-    function createNewTasksTab() {
-        taskStore.newTasks(newTaskTitle.value)
-        newTaskTitle.value = ''
-        showNewTaskTab.value = false
+    async function createNewTasksTab() {
+        try {
+            await axios.post("http://localhost:3000/parent-task", 
+                {
+                    userId: userStore.user.id,
+                    title: newTaskTitle.value
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.token}`
+                    }
+                }
+            )
+            .then((response) => {
+                newTaskTitle.value = ''
+                showNewTaskTab.value = false
+                taskStore.push(response.data.parentTask)
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        }
+        catch(error) {
+            console.log(error)
+        }
     }
+
     function toggleTheme () {
         theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
     }
@@ -67,9 +92,9 @@
         </v-list-item>
         <v-row>
             <VDContainer :animation="true" :data=taskStore.tasks v-if="taskStore.tasks" type="sort" @getData=funcName class="dragContainer">
-                <template v-slot:VDC="{data}">
+                <template v-slot:VDC="{data, index}">
                     <v-col cols="4">
-                        <taskCard :task="data" />
+                        <taskCard :task="data" :index="index" />
                     </v-col>
                 </template>
             </VDContainer>
@@ -90,24 +115,6 @@
                 </v-card>
             </v-col>
         </v-row>
-        <!-- <v-dialog v-model="taskStore.newTaskDialog">
-            <v-card title="New child task">
-                <v-card-item>
-                    <v-alert icon="mdi-alert">
-                        This will insert a new task inside the {{ task }}
-                    </v-alert>
-                </v-card-item>
-                <v-card-item>
-                    <v-text-field label="Title" variant="solo"></v-text-field>
-                    <v-text-field label="Description" variant="solo"></v-text-field>
-                    <v-select label="Level" variant="solo" :items="['High', 'Medium', 'Low']"></v-select>
-                </v-card-item>
-                <v-card-actions>
-                    <v-btn @click="taskStore.showNewTaskDialog">Close</v-btn>
-                    <v-btn color="green">Add</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog> -->
     </v-container>
 </template>
 

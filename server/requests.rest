@@ -49,16 +49,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6I
     "description": "child task description",
     "level": "Low"
 }
+###
+
+DELETE http://localhost:3000/delete-child-task/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJyZW50IGZhaXlheiIsInVzZXJuYW1lIjoiam9yZW45N3giLCJpYXQiOjE3MDYxMzk3NjMsImV4cCI6MTcwNjIyNjE2M30.76oAGKcwNviLTfTkRN-sOvks3YhFN8ARJ2DpUbWDpZU
+
+###
+
+DELETE http://localhost:3000/delete-parent-task/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJyZW50IGZhaXlheiIsInVzZXJuYW1lIjoiam9yZW45N3giLCJpYXQiOjE3MDYxMzk3NjMsImV4cCI6MTcwNjIyNjE2M30.76oAGKcwNviLTfTkRN-sOvks3YhFN8ARJ2DpUbWDpZU
 
 ###
 
 POST http://localhost:3000/parent-task
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJyZW50IGZhaXlheiIsInVzZXJuYW1lIjoiam9yZW45N3giLCJpYXQiOjE3MDU4NjY4MTUsImV4cCI6MTcwNTk1MzIxNX0.QSJWRyINVKUIV4O3bT3R37rsdGS3sdLGePVFR5c2YYA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJyZW50IGZhaXlheiIsInVzZXJuYW1lIjoiam9yZW45N3giLCJpYXQiOjE3MDYxMzk3NjMsImV4cCI6MTcwNjIyNjE2M30.76oAGKcwNviLTfTkRN-sOvks3YhFN8ARJ2DpUbWDpZU
 
 {
     "userId": 1,
-    "title": "DUmmy parent task title"
+    "title": "asdasdas 2"
 }
 
 ###

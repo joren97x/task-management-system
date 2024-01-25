@@ -1,14 +1,29 @@
 <script setup>
 
-    import { ref, computed } from 'vue'
+    import { ref, computed, reactive } from 'vue'
     import { useTaskStore } from '../stores/task.js'
-    import {format} from 'date-fns'
-    const prop = defineProps({ task: Object })
+    import { useUserStore } from '@/stores/user'
+    import { format } from 'date-fns'
+    import axios from 'axios'
+    const prop = defineProps({ task: Object, index: Number })
 
+    const userStore = useUserStore()
     const taskStore = useTaskStore()
     const newChildTaskDialog = ref(false)
+    const deleteTaskDialog = ref(false)
+    const deleteParentTaskDialog = ref(false)
     const tab = ref(null)
     const taskInfo = ref(null)
+    const message = ref(null)
+    const snackbar = ref(false)
+
+    const taskForm = reactive({
+        parentTaskId: prop.task.id,
+        title: null,
+        description: null,
+        level: null
+    })
+
     const levelIcons = new Map([
         ['High', { icon: 'mdi-arrow-up', color: 'red' }],
         ['Medium', { icon: 'mdi-minus', color: 'orange' }],
@@ -32,6 +47,75 @@
         tab.value = "info"
     }
 
+    async function submitNewChildTask() {
+        try {
+            await axios.post("http://localhost:3000/child-task", taskForm, {
+                headers: {
+                    Authorization: `Bearer ${userStore.token}`
+                }
+            })
+            .then((response) => {
+                console.log(response.data.task)
+                taskStore.tasks[prop.index].child_tasks.push({
+                    ...response.data.task
+                })
+                message.value = response.data.message
+                newChildTaskDialog.value = false
+                snackbar.value = true
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
+
+    async function deleteTask() {
+        try {
+            await axios.delete(`http://localhost:3000/delete-child-task/${taskInfo.value.id}`, {
+                headers: {
+                    Authorization: `Bearer ${userStore.token}`
+                }
+            })
+            .then((response) => {
+                deleteTaskDialog.value = false
+                message.value = response.data.message
+                snackbar.value = true
+                taskStore.tasks[prop.index].child_tasks = prop.task.child_tasks.filter(childTask => childTask.id !== taskInfo.value.id)
+                tab.value = "tasks"
+            })
+            .catch((error) => {
+                console.log(error)
+            }) 
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
+
+    async function deleteParentTask() {
+        try {
+            await axios.delete(`http://localhost:3000/delete-parent-task/${prop.task.id}`, {
+                headers: {
+                    Authorization: `Bearer ${userStore.token}`
+                }
+            })
+            .then((response) => {
+                deleteParentTaskDialog.value = false
+                message.value = response.data.message
+                snackbar.value = true
+                taskStore.deleteParentTask(prop.index)
+            })
+            .catch((error) => {
+                console.log(error)
+            }) 
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
 
 </script>
 
@@ -45,7 +129,8 @@
                     </p>
                 </template>
                 <template v-slot:append>
-                    <v-btn icon="mdi-plus" @click="newChildTaskDialog = true" color="blue-darken-2"></v-btn>
+                    <v-btn icon="mdi-plus" @click="newChildTaskDialog = true" class="me-2" color="blue-darken-2"></v-btn>
+                    <v-btn icon="mdi-delete-empty-outline" @click="deleteParentTaskDialog = true" color="red"></v-btn>
                 </template>
             </v-list-item>
         </v-sheet>
@@ -154,7 +239,7 @@
                             <template v-slot:append>
                                 <v-tooltip text="Delete task" location="top">
                                     <template v-slot:activator="{ props }">
-                                        <v-btn size="small" icon="mdi-delete-empty-outline" v-bind="props" variant="text" color="red"></v-btn>
+                                        <v-btn @click="deleteTaskDialog = true" size="small" icon="mdi-delete-empty-outline" v-bind="props" variant="text" color="red"></v-btn>
                                     </template>
                                 </v-tooltip>
                             </template>
@@ -182,16 +267,48 @@
                     </v-alert>
                 </v-card-item>
                 <v-card-item>
-                    <v-text-field label="Title" variant="solo"></v-text-field>
-                    <v-text-field label="Description" variant="solo"></v-text-field>
-                    <v-select label="Level" variant="solo" :items="['High', 'Medium', 'Low']"></v-select>
+                    <v-text-field label="Title" variant="solo" v-model="taskForm.title"></v-text-field>
+                    <v-text-field label="Description" variant="solo" v-model="taskForm.description"></v-text-field>
+                    <v-select label="Level" variant="solo" :items="['High', 'Medium', 'Low']" v-model="taskForm.level"></v-select>
                 </v-card-item>
                 <v-card-actions>
+                    <v-spacer/>
                     <v-btn @click="newChildTaskDialog = false">Close</v-btn>
-                    <v-btn color="green">Add</v-btn>
+                    <v-btn color="green" @click="submitNewChildTask">Add</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="deleteTaskDialog">
+            <v-card title="Delete child task">
+                <v-card-item>
+                    <v-alert icon="mdi-alert" color="red-lighten-2">
+                        Delete <strong>{{ taskInfo.title }}</strong>?
+                    </v-alert>
+                </v-card-item>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn @click="deleteTaskDialog = false">Close</v-btn>
+                    <v-btn color="red" @click="deleteTask">Delete</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="deleteParentTaskDialog">
+            <v-card title="Delete parent task">
+                <v-card-item>
+                    <v-alert icon="mdi-alert" color="red-lighten-2">
+                        Delete <strong>{{ task.title }}</strong>?
+                    </v-alert>
+                </v-card-item>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn @click="deleteParentTaskDialog = false">Close</v-btn>
+                    <v-btn color="red" @click="deleteParentTask">Delete</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-snackbar v-model="snackbar">
+            {{ message }}
+        </v-snackbar>
     </v-card>
     
 </template>

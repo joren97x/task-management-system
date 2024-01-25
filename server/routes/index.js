@@ -1,7 +1,7 @@
 import express from 'express'
 // import { register, login } from '../controllers/authController.js'
-import { storeChildTask } from '../controllers/childTaskController.js'
-import { storeParentTask } from '../controllers/parentTaskController.js'
+import { storeChildTask, deleteChildTask } from '../controllers/childTaskController.js'
+import { storeParentTask, deleteParentTask } from '../controllers/parentTaskController.js'
 import { getAllTasks, changeStatus } from '../controllers/taskController.js'
 
 const router = express.Router()
@@ -11,7 +11,8 @@ const router = express.Router()
 router.post('/child-task', storeChildTask)
 router.post('/parent-task', storeParentTask)
 router.put('/change-status', changeStatus)
-
+router.delete('/delete-child-task/:id', deleteChildTask)
+router.delete('/delete-parent-task/:id', deleteParentTask)
 router.get('/tasks/:id', getAllTasks)
 
 export default router

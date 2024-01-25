@@ -49,7 +49,7 @@ function startServer() {
     app.post('/login', async (req, res) => { 
         console.log("there should be no middleware")
         try {
-            const user = await User.findOne({ attributes: ['id', 'name', 'username'], where: { username: req.body.user.username }})
+            const user = await User.findOne({ attributes: ['id', 'name', 'username'], where: { username: req.body.user.username, password: req.body.user.password }})
             if(user == null) {
                 res.status(401).send({message: "Invalid credentials"})
             }
