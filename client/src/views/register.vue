@@ -2,8 +2,13 @@
 
     import { reactive, ref } from 'vue'
     import axios from 'axios'
+    import { useUserStore } from '../stores/user'
+    import { useRouter } from 'vue-router'
 
+    const router = useRouter()
+    const userStore = useUserStore()
     const showPassword = ref(false)
+    const errorMsg = ref(null)
     const user = reactive({
         username: null,
         name: null,
@@ -11,8 +16,15 @@
     })
 
     async function register() {
-        const result = await axios.post('http://localhost:3000/register', {user})
-        console.log(result)
+        await axios.post('http://localhost:3000/register', {user})
+        .then((response) => {
+            userStore.setUser(response.data.user, response.data.accessToken)
+            router.push('/')
+        })
+        .catch((error) => {
+            errorMsg.value =  error.response.data
+            console.log(error)
+        })
     }
 
 </script>
@@ -21,7 +33,7 @@
     <v-container>
         <v-card title="Register" color="grey-lighten-3 mx-auto" width="50%">
             <v-card-item>
-                <v-text-field label="Username" variant="solo" v-model="user.username"></v-text-field>
+                <v-text-field label="Username" variant="solo" v-model="user.username" :error-messages="errorMsg?.message"></v-text-field>
                 <v-text-field label="Name" variant="solo" v-model="user.name"></v-text-field>
                 <v-text-field label="Password" variant="solo" :type="showPassword ? '' : 'password' " v-model="user.password">
                     <template v-slot:append-inner>

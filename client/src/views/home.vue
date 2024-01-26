@@ -17,11 +17,14 @@
 
     onMounted(async() => {
         try {
+            console.log("hello?")
+
             const tasks = await axios.get(`http://localhost:3000/tasks/${userStore.user.id}`, {
                 headers: {
                     Authorization: `Bearer ${userStore.token}`
                 }
             })
+            console.log(tasks)
             tasks.data.forEach(task => {
                 taskStore.push(task)
             })
@@ -66,14 +69,22 @@
         theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
     }
 
-    function logout() {
-        localStorage.removeItem('token')
-        router.push('/login')
+    async function logout() {
+        await axios.delete(`http://localhost:3000/delete-refresh-token/${userStore.user.id}`, {
+            headers: {
+                Authorization: `Bearer ${userStore.token}`
+            }
+        })
+        .then(() => {
+            localStorage.removeItem('token')
+            taskStore.tasks = []
+            router.push('/login')
+        })
     }
 
 </script>
 <template>
-    <v-container class="con">
+    <v-container>
         <v-list-item class="mb-6">
             <template v-slot:prepend>
                 <v-avatar>
@@ -90,6 +101,7 @@
                 <v-btn variant="text" @click="logout" icon="mdi-logout" color="red"></v-btn>
             </template>
         </v-list-item>
+        <p class="text-h6 mb-3">What is good, {{ userStore.user.name }}👋</p>
         <v-row>
             <VDContainer :animation="true" :data=taskStore.tasks v-if="taskStore.tasks" type="sort" @getData=funcName class="dragContainer">
                 <template v-slot:VDC="{data, index}">

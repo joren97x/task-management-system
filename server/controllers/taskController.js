@@ -9,12 +9,15 @@ const ChildTask = ChildTaskodule.default
 export const getAllTasks = async (req, res) => {
     try {
         const result = await ParentTask.findAll({
+            where: {
+                userId: req.params.id
+            },
             include: ChildTask
         })
         res.json(result)
     }
     catch(error) {
-        console.log(error)
+        res.status(500).send({message: "Internal server error"})
     }
 }
 

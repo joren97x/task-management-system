@@ -55,7 +55,10 @@
                 }
             })
             .then((response) => {
-                console.log(response.data.task)
+                taskForm.description = null
+                taskForm.title = null
+                taskForm.level = null
+                
                 taskStore.tasks[prop.index].child_tasks.push({
                     ...response.data.task
                 })
