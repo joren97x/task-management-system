@@ -1,4 +1,6 @@
-# forda unsaon pag setup ang froject HAHAHAH  
+![0000todoapp](https://github.com/joren97x/task-management-system/assets/112835241/41903d69-1604-477a-8098-7c8a0410da89)
+
+# setup
 make sure to create a database named task_management and import the file with a .sql extension in the root folder
 
 Requirements
