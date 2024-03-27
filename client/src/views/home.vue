@@ -91,7 +91,7 @@
                 <v-avatar>
                     <v-img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Microsoft_To-Do_icon.svg/512px-Microsoft_To-Do_icon.svg.png"></v-img>
                 </v-avatar>
-                <p class="text-h5 font-weight-bold ms-3">To-do app</p> 
+                <p class="text-h5 font-weight-bold ms-3">Todo plus</p> 
             </template>
             <template v-slot:append>
                 <v-switch v-model="darkMode" hide-details inset @click="toggleTheme">
@@ -128,7 +128,6 @@
                 </v-card>
             </v-col>
         </v-row>
-        <p>test</p>
     </v-container>
 </template>
 
